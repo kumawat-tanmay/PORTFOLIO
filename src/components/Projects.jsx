@@ -10,8 +10,7 @@ const projects = [
     icon: <ShoppingBasket size={28} />,
     color: "emerald",
     hoverStyle: "group-hover:text-emerald-400 group-hover:border-emerald-500/50 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.1)]",
-    link: "#", // Replace with your grocery link
-    github: "#"
+    link: "#", // Update this when you upload to Git
   },
   {
     title: "AI Text-to-Image Generator",
@@ -20,18 +19,16 @@ const projects = [
     icon: <ImageIcon size={28} />,
     color: "fuchsia",
     hoverStyle: "group-hover:text-fuchsia-400 group-hover:border-fuchsia-500/50 group-hover:shadow-[0_0_40px_rgba(217,70,239,0.1)]",
-    link: "#",
-    github: "#"
+    link: "https://github.com/kumawat-tanmay/AI-Text-to-Image-generator",
   },
   {
-    title: "Stress Checker ",
+    title: "Stress Checker",
     desc: "A comprehensive behavioral platform featuring: (1) A 10-point psychometric mood assessment, (2) Real-time facial expression detection with music recommendations mapped from a curated library, (3) An integrated daily task management system for organized productivity, and (4) An AI companion for therapeutic dialogue.",
     tags: ["Computer Vision", "MERN Stack", "JWT", "OpenAI"],
     icon: <Bot size={28} />,
     color: "cyan",
     hoverStyle: "group-hover:text-cyan-400 group-hover:border-cyan-500/50 group-hover:shadow-[0_0_40px_rgba(34,211,238,0.1)]",
-    link: "https://github.com/kumawat-tanmay/AI-Stress-Reliever-Chatbot",
-    github: "https://github.com/kumawat-tanmay/AI-Stress-Reliever-Chatbot"
+    link: "https://github.com/kumawat-tanmay/Stress-Checker",
   },
   {
     title: "AI Code Reviewer",
@@ -57,10 +54,17 @@ const Projects = () => (
   <div className="max-w-6xl mx-auto px-6">
     <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
       <div>
-        <h2 className="text-4xl font-bold mb-4 tracking-tight text-white">Selected <span className="text-zinc-600 font-light italic">Works</span></h2>
+        <h2 className="text-4xl font-bold mb-4 tracking-tight text-white">
+          Selected <span className="text-zinc-600 font-light italic">Works</span>
+        </h2>
         <div className="h-0.5 w-12 bg-zinc-800"></div>
       </div>
-      <a href="https://github.com/kumawat-tanmay" target="_blank" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2 text-xs font-mono">
+      <a 
+        href="https://github.com/kumawat-tanmay" 
+        target="_blank" 
+        rel="noreferrer"
+        className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2 text-xs font-mono"
+      >
         git_check <ArrowUpRight size={14}/>
       </a>
     </div>
@@ -79,6 +83,7 @@ const Projects = () => (
             <div className="transition-transform duration-500 group-hover:scale-110 group-hover:text-white">
               {p.icon}
             </div>
+            {/* Direct GitHub Link */}
             <a href={p.link} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
               <Github size={22}/>
             </a>

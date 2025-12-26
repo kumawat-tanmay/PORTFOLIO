@@ -4,7 +4,7 @@ import { ArrowUpRight, Send, FileText, Download } from 'lucide-react';
 
 const Hero = () => {
   // Path to your resume in the public folder
-  const resumeUrl = "/Tanmay_Kumawat_Resume.pdf";
+  const resumeUrl = "/tanmay_resume.pdf";
 
   return (
     <div className="flex flex-col items-center justify-center pt-40 px-6 max-w-5xl mx-auto text-center">

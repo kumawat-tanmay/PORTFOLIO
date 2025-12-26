@@ -9,9 +9,9 @@ const ResumeButton = () => {
     setStatus('loading');
     setTimeout(() => {
       setStatus('done');
-      // This looks for resume.pdf in your 'public' folder
+      // This looks for tanmay_resume.pdf in your 'public' folder
       const link = document.createElement('a');
-      link.href = '/resume.pdf'; 
+      link.href = '/tanmay_resume.pdf'; 
       link.download = 'Tanmay_Resume.pdf';
       link.click();
       setTimeout(() => setStatus('idle'), 3000);
