@@ -1,42 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Home, User, Code, Briefcase, GraduationCap, Mail } from 'lucide-react';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
-  // 1. Handle background blur on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 2. Optimized Scroll Spy to detect Active Section
-  // Updated Scroll Spy in Navbar.jsx
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
-    
-    const options = {
-      // This Margin ensures that as soon as the section is 20% from the top, 
-      // it becomes active.
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: 0
-    };
+    const options = { rootMargin: "-30% 0px -60% 0px", threshold: 0 };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          console.log("Active Section:", entry.target.id); // For debugging
-          setActiveSection(entry.target.id);
-        }
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
       });
     }, options);
 
     sections.forEach((section) => observer.observe(section));
-    
     return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
 
@@ -53,26 +39,35 @@ const Navbar = () => {
     <>
       {/* DESKTOP TOP NAVBAR */}
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 hidden md:block ${
-        scrolled ? 'py-4 bg-zinc-950/80 backdrop-blur-xl border-b border-white/5' : 'py-8 bg-transparent'
+        scrolled ? 'py-4 bg-zinc-950/70 backdrop-blur-md border-b border-white/5' : 'py-8 bg-transparent'
       }`}>
-        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-          <a href="#home" className="text-xl font-black tracking-tighter text-white">
-            TANMAY<span className="text-indigo-500">.</span>
-          </a>
+        <div className="max-w-6xl mx-auto px-10 flex justify-between items-center">
+          <motion.a 
+            href="#home" 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-2xl font-black tracking-tighter text-white group"
+          >
+            TANMAY<span className="text-indigo-500 group-hover:animate-pulse">.</span>
+          </motion.a>
           
-          <div className="flex gap-8">
+          <div className="flex gap-10">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
                 href={link.href} 
-                className={`text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 relative py-2 ${
-                  activeSection === link.id ? 'text-indigo-400' : 'text-zinc-500 hover:text-zinc-200'
+                className={`text-[11px] uppercase tracking-[0.25em] font-bold transition-all duration-300 relative py-2 ${
+                  activeSection === link.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
                 {link.name}
-                {/* Underline indicator for Desktop */}
+                {/* Magnetic Sliding Underline */}
                 {activeSection === link.id && (
-                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-full" />
+                  <motion.div 
+                    layoutId="activeTab"
+                    className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
                 )}
               </a>
             ))}
@@ -80,31 +75,42 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* MOBILE BOTTOM NAVIGATION (App Style) */}
-      <nav className="fixed bottom-6 left-0 w-full z-[100] md:hidden px-4">
-        <div className="bg-zinc-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl flex justify-around items-center py-3 shadow-2xl">
+      {/* MOBILE BOTTOM NAVIGATION (Floating Dock Style) */}
+      <nav className="fixed bottom-8 left-0 w-full z-[100] md:hidden px-6">
+        <motion.div 
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          className="bg-zinc-900/80 backdrop-blur-2xl border border-white/10 rounded-3xl flex justify-around items-center py-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        >
           {navLinks.map((link) => (
             <a 
               key={link.name} 
               href={link.href} 
-              className={`flex flex-col items-center gap-1 transition-all duration-300 ${
-                activeSection === link.id ? 'text-indigo-400 scale-110' : 'text-zinc-500'
+              className={`relative flex flex-col items-center gap-1 transition-all duration-300 ${
+                activeSection === link.id ? 'text-indigo-400' : 'text-zinc-500'
               }`}
             >
-              <div className="p-1">
+              <motion.div 
+                whileTap={{ scale: 0.8 }}
+                className={`p-1 ${activeSection === link.id ? 'scale-110' : 'scale-100'}`}
+              >
                 {link.icon}
-              </div>
-              <span className="text-[7px] uppercase font-bold tracking-tighter">
+              </motion.div>
+              
+              <span className="text-[8px] uppercase font-black tracking-tighter">
                 {link.name}
               </span>
               
-              {/* Active Dot indicator for Mobile */}
+              {/* Floating Active Glow for Mobile */}
               {activeSection === link.id && (
-                <div className="w-1 h-1 bg-indigo-400 rounded-full mt-0.5 animate-pulse" />
+                <motion.div 
+                  layoutId="mobileActive"
+                  className="absolute -top-2 w-8 h-8 bg-indigo-500/10 blur-xl rounded-full -z-10"
+                />
               )}
             </a>
           ))}
-        </div>
+        </motion.div>
       </nav>
     </>
   );

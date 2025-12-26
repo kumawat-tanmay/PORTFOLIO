@@ -17,73 +17,64 @@ const Skills = () => {
   const containerRef = useRef(null);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 overflow-hidden py-10" ref={containerRef}>
+    <div className="max-w-6xl mx-auto px-4 overflow-hidden py-16" ref={containerRef}>
       
-      {/* Heading Section */}
-      <div className="relative mb-24 text-center">
+      {/* Header Section */}
+      <div className="relative mb-16 md:mb-24 text-center">
         <motion.h2 
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-extrabold tracking-tight text-white"
+          className="text-3xl md:text-5xl font-extrabold tracking-tight text-white"
         >
-          Technical <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">Arsenal</span>
+          Technical <span className="bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">Arsenal</span>
         </motion.h2>
-        
-        <motion.div 
-          initial={{ width: 0 }}
-          whileInView={{ width: "80px" }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="h-1 bg-gradient-to-r from-indigo-500 to-cyan-500 mx-auto mt-4 rounded-full"
-        />
-        
-        <p className="text-zinc-600 text-[10px] font-mono mt-4 uppercase tracking-[0.3em] opacity-80">
-          Full Stack & AI Integration (Drag icons)
+        <p className="text-zinc-500 text-[9px] md:text-[10px] font-mono mt-4 uppercase tracking-[0.3em]">
+          Interactive Modules • Drag to Explore
         </p>
       </div>
 
-      {/* Draggable Skills Grid */}
-      <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-y-16 gap-x-8">
+      {/* Grid: 3 cols on mobile, 5 on desktop */}
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-12 gap-x-4 md:gap-x-10">
         {skills.map((skill, i) => (
           <motion.div
             key={i}
             drag
             dragConstraints={containerRef}
-            dragElastic={0.5}
-            animate={{ y: [0, -8, 0] }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              delay: i * 0.1,
-              ease: "easeInOut"
-            }}
-            whileHover={{ scale: 1.1 }}
-            whileDrag={{ scale: 1.2, zIndex: 50 }}
-            className="flex flex-col items-center gap-4 cursor-grab active:cursor-grabbing"
+            dragElastic={0.6}
+            whileTap={{ scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.03 }}
+            className="group flex flex-col items-center relative"
           >
-            {/* Icon Wrapper with Brand Glow */}
+            {/* Icon Wrapper - Size reduced for mobile (w-16 h-16) and larger for desktop (w-24 h-24) */}
             <div 
-              className={`w-20 h-20 flex items-center justify-center rounded-full transition-all duration-500 ${skill.dark ? 'invert opacity-80' : ''}`}
+              className={`relative w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-xl md:rounded-2xl bg-zinc-900/40 border border-white/5 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20 ${skill.dark ? 'invert opacity-80' : ''}`}
               style={{ 
-                background: `radial-gradient(circle, ${skill.color} 0%, transparent 70%)` 
+                boxShadow: `0 0 20px -10px ${skill.color}` 
               }}
             >
+              {/* Icon Image - Adjusted for mobile */}
               <img 
                 src={skill.icon} 
                 alt={skill.name} 
-                className="w-10 h-10 pointer-events-none drop-shadow-xl" 
+                className="w-8 h-8 md:w-12 md:h-12 pointer-events-none group-hover:scale-110 transition-transform" 
+              />
+              
+              {/* Subtle radial glow */}
+              <div 
+                className="absolute inset-0 rounded-xl md:rounded-2xl -z-10 opacity-10 group-hover:opacity-30"
+                style={{ background: `radial-gradient(circle, ${skill.color} 0%, transparent 70%)` }}
               />
             </div>
             
-            <div className="text-center">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
+            {/* Text Label - Smaller on mobile */}
+            <div className="mt-3 text-center">
+              <span className="text-[9px] md:text-[11px] font-bold text-zinc-500 uppercase tracking-widest group-hover:text-white transition-colors">
                 {skill.name}
-                </span>
-                {/* Specific sub-label for AI */}
-                {skill.name === "Gemini AI" && (
-                    <span className="text-[8px] text-indigo-400 font-mono">LLM Integration</span>
-                )}
+              </span>
             </div>
           </motion.div>
         ))}

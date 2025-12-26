@@ -1,104 +1,162 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Send, FileText, Download } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, Send, FileText, Download, Loader2, Check } from 'lucide-react';
 
 const Hero = () => {
-  // Path to your resume in the public folder
+  const [downloadStatus, setDownloadStatus] = useState('idle');
   const resumeUrl = "/tanmay_resume.pdf";
 
+  // Function to handle the premium download animation
+  const handleDownload = () => {
+    if (downloadStatus !== 'idle') return;
+    setDownloadStatus('loading');
+    setTimeout(() => {
+      setDownloadStatus('done');
+      const link = document.createElement('a');
+      link.href = resumeUrl;
+      link.download = 'Tanmay_Resume.pdf';
+      link.click();
+      setTimeout(() => setDownloadStatus('idle'), 3000);
+    }, 2000);
+  };
+
+  const nameLetter = {
+    hidden: { y: 50, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 120 } }
+  };
+
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.2 }
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center pt-40 px-6 max-w-5xl mx-auto text-center">
+    <div className="relative flex flex-col items-center justify-center pt-24 md:pt-40 px-6 max-w-6xl mx-auto text-center">
       
-      {/* Profile Image with Glow Effect */}
+      {/* Dynamic Background Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-visible">
+        <div className="absolute top-20 left-1/4 w-64 h-64 bg-indigo-600/20 blur-[100px] animate-pulse" />
+        <div className="absolute bottom-20 right-1/4 w-64 h-64 bg-emerald-600/10 blur-[100px]" />
+      </div>
+
+      {/* Profile Image with Floating Effect */}
       <motion.div 
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="relative mb-10"
+        transition={{ type: "spring", damping: 12 }}
+        className="relative mb-8 md:mb-12"
       >
-        <div className="absolute inset-0 rounded-full bg-blue-500 blur-3xl opacity-20 animate-pulse"></div>
-        <img 
+        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 blur-2xl opacity-30 animate-pulse" />
+        <motion.img 
+          animate={{ y: [0, -12, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           src="/tanmay-profile.png" 
-          alt="Tanmay Kumawat Professional" 
-          className="relative w-44 h-44 rounded-full border-2 border-white/10 p-1 shadow-2xl object-cover z-10" 
+          alt="Tanmay Kumawat" 
+          className="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-white/10 p-1.5 shadow-2xl object-cover z-10 bg-zinc-900/80 backdrop-blur-sm" 
         />
       </motion.div>
 
+      {/* RESPONSIVE NAME: Stacked on Mobile, Row on Desktop */}
       <motion.h1 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="text-6xl md:text-8xl font-black tracking-tighter"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+        className="text-6xl sm:text-7xl md:text-9xl font-black tracking-tighter flex flex-col md:flex-row items-center justify-center gap-0 md:gap-6 leading-[0.9] md:leading-tight"
       >
-        TANMAY <span className="text-zinc-500">KUMAWAT</span>
+        <div className="flex">
+          {"TANMAY".split("").map((char, i) => (
+            <motion.span key={i} variants={nameLetter} className="text-white inline-block">{char}</motion.span>
+          ))}
+        </div>
+        <div className="flex text-zinc-700">
+          {"KUMAWAT".split("").map((char, i) => (
+            <motion.span key={i} variants={nameLetter} className="inline-block">{char}</motion.span>
+          ))}
+        </div>
       </motion.h1>
       
       <motion.p 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="mt-8 text-zinc-400 text-lg md:text-xl max-w-2xl leading-relaxed font-light"
+        transition={{ delay: 1.2 }}
+        className="mt-8 text-zinc-400 text-sm md:text-xl max-w-2xl leading-relaxed font-light px-4"
       >
-        A highly motivated <span className="text-white font-medium">Full Stack Developer</span> graduating in 2025. 
-        MERN stack specialist with a <span className="text-white font-medium italic">7.33 CGPA</span>.
+        High-performance <span className="text-white font-medium italic underline decoration-indigo-500/50 underline-offset-8 uppercase tracking-widest text-xs md:text-base">Full Stack Developer</span> 
+        <br className="hidden md:block" /> based in Jaipur, specialized in MERN & AI workflows.
       </motion.p>
 
-      {/* PRIMARY ACTIONS: Projects & Contact */}
-      <div className="mt-14 flex flex-col sm:flex-row gap-6 justify-center items-center">
+      {/* ACTION BUTTONS */}
+      <div className="mt-12 flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-lg">
         <motion.a 
           href="#projects"
-          whileHover={{ y: -4 }}
+          whileHover={{ scale: 1.02, y: -4 }}
           whileTap={{ scale: 0.98 }}
-          className="group relative px-10 py-4 bg-white text-black font-bold rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 w-full sm:w-auto justify-center shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+          className="group relative w-full sm:w-auto px-10 py-4 bg-white text-black font-black rounded-2xl flex items-center justify-center gap-3 transition-all shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
         >
-          <span className="relative z-10">Explore Work</span>
-          <ArrowUpRight size={20} className="relative z-10 group-hover:rotate-45 transition-transform duration-300" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-200 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          EXPLORE WORK
+          <ArrowUpRight size={20} className="group-hover:rotate-45 transition-transform" />
         </motion.a>
 
         <motion.a 
           href="#contact"
-          whileHover={{ y: -4 }}
-          className="group px-10 py-4 bg-zinc-900/50 backdrop-blur-md border border-white/10 text-white font-medium rounded-xl flex items-center gap-3 hover:bg-zinc-800 transition-all duration-300 w-full sm:w-auto justify-center"
+          whileHover={{ scale: 1.02, y: -4, backgroundColor: "rgba(255,255,255,0.05)" }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full sm:w-auto px-10 py-4 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-3 backdrop-blur-xl"
         >
-          <span>Get in touch</span>
-          <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-fuchsia-500 transition-colors duration-300">
-            <Send size={14} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
-          </div>
+          CONTACT
+          <Send size={18} className="text-indigo-400" />
         </motion.a>
       </div>
 
-      {/* HIGHLIGHTED RESUME SECTION */}
+      {/* RESUME BUTTONS WITH INTERACTIVE ANIMATIONS */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-16 flex flex-wrap gap-4 justify-center items-center"
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.6 }}
+        className="mt-16 flex flex-wrap gap-6 justify-center items-center pb-20"
       >
-        {/* View Resume Button */}
+        {/* VIEW BUTTON - BLUE THEME */}
         <motion.a 
           href={resumeUrl} 
           target="_blank" 
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.05, borderColor: "rgba(59, 130, 246, 0.5)" }}
-          className="flex items-center gap-3 px-6 py-3 rounded-full bg-blue-500/5 border border-blue-500/20 text-blue-400 hover:text-blue-300 transition-all shadow-[0_0_15px_rgba(59,130,246,0.1)]"
+          whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(56, 189, 248, 0.2)" }}
+          className="flex items-center gap-3 px-8 py-3 rounded-xl border border-sky-500/30 bg-sky-500/5 text-sky-400 text-xs font-black tracking-[0.2em] hover:bg-sky-500 hover:text-white transition-all duration-300"
         >
-          <div className="p-2 bg-blue-500/10 rounded-full">
-            <FileText size={18} />
-          </div>
-          <span className="text-sm font-semibold tracking-wide">VIEW RESUME</span>
+          <FileText size={16} />
+          VIEW CV
         </motion.a>
 
-        {/* Download CV Button */}
-        <motion.a 
-          href={resumeUrl} 
-          download="Tanmay_Kumawat_Resume.pdf"
-          whileHover={{ scale: 1.05, borderColor: "rgba(34, 197, 94, 0.5)" }}
-          className="flex items-center gap-3 px-6 py-3 rounded-full bg-green-500/5 border border-green-500/20 text-green-400 hover:text-green-300 transition-all shadow-[0_0_15px_rgba(34,197,94,0.1)]"
+        {/* DOWNLOAD BUTTON - GREEN THEME */}
+        <motion.button 
+          onClick={handleDownload}
+          whileHover={{ scale: 1.05, boxShadow: downloadStatus === 'done' ? "0 0 30px rgba(16, 185, 129, 0.4)" : "0 0 30px rgba(255, 255, 255, 0.05)" }}
+          className={`flex items-center gap-3 px-8 py-3 rounded-xl border font-black tracking-[0.2em] text-xs transition-all duration-500 min-w-[180px] justify-center
+            ${downloadStatus === 'done' 
+              ? 'border-emerald-500 bg-emerald-500 text-white' 
+              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/40 hover:text-white'}
+          `}
         >
-          <div className="p-2 bg-green-500/10 rounded-full">
-            <Download size={18} />
-          </div>
-          <span className="text-sm font-semibold tracking-wide">DOWNLOAD RESUME</span>
-        </motion.a>
+          <AnimatePresence mode="wait">
+            {downloadStatus === 'idle' && (
+              <motion.div key="idle" className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Download size={16} /> DOWNLOAD
+              </motion.div>
+            )}
+            {downloadStatus === 'loading' && (
+              <motion.div key="loading" className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Loader2 size={16} className="animate-spin" /> FETCHING
+              </motion.div>
+            )}
+            {downloadStatus === 'done' && (
+              <motion.div key="done" className="flex items-center gap-2" initial={{ scale: 0.5 }} animate={{ scale: 1 }}>
+                <Check size={18} strokeWidth={4} /> SUCCESS
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
       </motion.div>
 
     </div>
