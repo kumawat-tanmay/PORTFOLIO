@@ -118,10 +118,16 @@ const Hero = () => {
         transition={{ delay: 1.6 }}
         className="mt-16 flex flex-wrap gap-6 justify-center items-center pb-20"
       >
-        {/* VIEW BUTTON - BLUE THEME */}
+       
         <motion.a 
           href={resumeUrl} 
           target="_blank" 
+          rel="noopener noreferrer"
+         
+          onClick={(e) => {
+         
+            console.log("Opening Resume...");
+          }}
           whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(56, 189, 248, 0.2)" }}
           className="flex items-center gap-3 px-8 py-3 rounded-xl border border-sky-500/30 bg-sky-500/5 text-sky-400 text-xs font-black tracking-[0.2em] hover:bg-sky-500 hover:text-white transition-all duration-300"
         >
