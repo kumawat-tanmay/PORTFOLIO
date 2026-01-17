@@ -21,7 +21,7 @@ const Contact = () => {
     {
       name: "LinkedIn",
       label: "Connect on LinkedIn",
-      href: "https://www.linkedin.com/in/tanmay-kumawat/", 
+      href: "https://www.linkedin.com/in/tanmay-kumawat-448201231/", 
       icon: <Linkedin size={28} />,
       color: "group-hover:text-blue-400"
     },
