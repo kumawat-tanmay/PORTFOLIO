@@ -148,7 +148,7 @@ const Hero = () => {
           <AnimatePresence mode="wait">
             {downloadStatus === 'idle' && (
               <motion.div key="idle" className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Download size={16} /> DOWNLOAD
+                <Download size={16} /> DOWNLOAD Resume
               </motion.div>
             )}
             {downloadStatus === 'loading' && (
